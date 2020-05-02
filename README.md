@@ -31,8 +31,8 @@ To setup the app, run the following commands:
 ## Download code from GitHub
 
 ```
-git clone https://github.com/sahays/streaming-neo4j-msk-neptune
-cd streaming-neo4j-msk-neptune/bootstrapper
+git clone https://github.com/aws-samples/cdc-neo4j-msk-neptune
+cd cdc-neo4j-msk-neptune/bootstrapper
 ```
 
 ## Review configuration file
