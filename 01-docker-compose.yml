@@ -1,0 +1,16 @@
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+version: "3.7"
+volumes:
+  shared-folder:
+services:
+  startup-service:
+    build: ./docker-files/startup-service
+    container_name: startup-service
+    environment:
+      - AWS_REGION
+      - SHARED_FOLDER=/data
+    command: sh -c "/run-script.sh"
+    volumes:
+      - shared-folder:/data

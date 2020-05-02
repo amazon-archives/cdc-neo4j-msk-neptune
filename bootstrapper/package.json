@@ -1,0 +1,34 @@
+{
+  "name": "cdk-app",
+  "version": "0.1.0",
+  "bin": {
+    "cdk-app": "bin/cdk-app.js"
+  },
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest",
+    "deploy-network": "cdk deploy streaming-blog-network-stack && aws cloudformation describe-stacks --stack-name streaming-blog-network-stack > streaming-blog-network-stack.json.env",
+    "deploy-neptune": "cdk deploy streaming-blog-neptune-stack && aws cloudformation describe-stacks --stack-name streaming-blog-neptune-stack > streaming-blog-neptune-stack.json.env",
+    "deploy-msk": "cdk deploy streaming-blog-msk-stack && aws cloudformation describe-stacks --stack-name streaming-blog-msk-stack > streaming-blog-msk-stack.json.env",
+    "deploy-ec2": "cdk deploy streaming-blog-ec2-stack && aws cloudformation describe-stacks --stack-name streaming-blog-ec2-stack > streaming-blog-ec2-stack.json.env",
+    "deploy": "node third-party-agreement.js && cdk deploy *-stack",
+    "reset": "cdk destroy streaming-blog-ec2-stack && cdk deploy *-stack",
+    "destroy": "cdk destroy *-stack"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "^1.32.0",
+    "aws-cdk": "^1.32.0",
+    "jest": "^25.3.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-ec2": "^1.32.0",
+    "@aws-cdk/aws-iam": "^1.32.0",
+    "@aws-cdk/aws-msk": "^1.32.0",
+    "@aws-cdk/aws-neptune": "^1.32.0",
+    "@aws-cdk/aws-s3": "^1.32.0",
+    "@aws-cdk/core": "^1.32.0",
+    "aws-sdk": "^2.655.0",
+    "prompts": "^2.3.2"
+  }
+}

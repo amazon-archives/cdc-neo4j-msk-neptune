@@ -1,0 +1,15 @@
+{
+	"app": "node bin/bootstrapper.js",
+	"context": {
+		"VPC_CIDR": "192.168.0.0/16",
+		"EC2_CLASS": "t3a",
+		"EC2_TYPE": "xlarge",
+		"EC2_KEY_PAIR": "<your-key-pair-name>",
+		"SG_FROM_IP": "<provide-your-ip>",
+		"KAFKA_BROKER_INSTANCE_TYPE": "kafka.m5.large",
+		"NEPTUNE_DB_INSTANCE_TYPE": "db.r5.large",
+		"SOURCE_TOPIC_NODES": "Person{*};Movie{*}",
+		"SOURCE_TOPIC_RELATIONSHIPS": "ACTED_IN{*}",
+		"KAFKA_TOPIC": "graphstream"
+	}
+}

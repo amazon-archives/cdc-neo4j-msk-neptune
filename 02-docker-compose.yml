@@ -1,0 +1,63 @@
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+version: "3.7"
+volumes:
+  shared-folder:
+services:
+  kafka-topic-service:
+    build: ./docker-files/kafka-topic-service
+    container_name: kafka-topic-service
+    hostname: kafka-topic-service
+    command: sh -c "/run-script.sh"
+    environment:
+      - KAFKA_TOPIC
+      - ZOOKEEPER_CONNECT
+  neo4j-service:
+    build: ./docker-files/neo4j-service
+    container_name: neo4j-service
+    hostname: neo4j-service
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+      - "9094:9094"
+      - "2181:2181"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 40000
+        hard: 60000
+    volumes:
+      - shared-folder:/data
+    environment:
+      - NEO4J_AUTH=none
+      - NEO4J_dbms_logs_debug_level=DEBUG
+      # KAFKA related configuration
+      - NEO4J_kafka_zookeeper_connect=${ZOOKEEPER_CONNECT}
+      - NEO4J_kafka_bootstrap_servers=${BOOTSTRAP_SERVERS}
+      - NEO4J_kafka_security_protocol=SSL
+      - NEO4J_kafka_ssl_truststore_location=/var/lib/neo4j/temp/kafka.client.truststore.jks
+      - NEO4J_kafka_acks=1
+      - NEO4J_kafka_num_partitions=1
+      - NEO4J_kafka_retries=2
+      - NEO4J_auto_create_topics_enable=true
+      # streams
+      - NEO4J_streams_procedures_enabled=true
+      - NEO4J_streams_source_enabled=true
+      - NEO4J_streams_source_topic_nodes_${KAFKA_TOPIC}=${SOURCE_TOPIC_NODES}
+      - NEO4J_streams_source_topic_relationships_${KAFKA_TOPIC}=${SOURCE_TOPIC_RELATIONSHIPS}
+      - NEO4J_streams_source_schema_polling_interval=10000
+      # other
+      - NEO4J_apoc_trigger_enabled=true
+      - NEO4J_dbms_jvm_additional=-Djavax.net.debug=ssl:handshake
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,streams.*
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,streams.*
+  transformation-service:
+    build: ./docker-files/transformation-service
+    container_name: transformation-service
+    hostname: transformation-service
+    command: sh -c "/run-script.sh"
+    environment:
+      - KAFKA_TOPIC
+      - BOOTSTRAP_SERVERS
+      - NEPTUNE_HOST
